@@ -1,0 +1,21 @@
+INSTRUCTIONS FOR STEP 6
+
+    6. change API, adjust callers
+
+Polymorphism achievement unlocked!
+
+We've eliminated the last of our 'scaffolding' methods (the methods we introduced while we changed the structure of the code) and are now using polymorphism to great effect.
+
+So far, all of our changes have been isolated from the rest of the system. Unfortunately, in this last step we can no longer hide what we are doing; instead we must proudly broadcast it to the world.
+
+In other words, we have to change our public interface from
+    generateFlatFormatRecordForShopEvent(Object obj)
+to
+    generateFlatFormatRecordForShopEvent(ShopEvent shopEvent)
+
+And deal with changes in the calling code, if any.
+
+TO DO
+
+Change generateFlatFormatRecordForShopEvent to take a ShopEvent argument instead of an object. Eliminate the last instanceof usage. Rejoice.
+
