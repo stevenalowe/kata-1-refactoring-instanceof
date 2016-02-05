@@ -14,4 +14,8 @@ public class ShopOpenEvent {
 
     public String getId() { return id; }
     public void setId(String value) { id = value; }
+
+    public String convert() {
+        return String.format("%-7s-%10s:%05d", getId(), getName(), getNumber());
+    }
 }

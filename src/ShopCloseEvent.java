@@ -18,4 +18,8 @@ public class ShopCloseEvent {
 
     public String getCategory() { return category; }
     public void setCategory(String value) { category = value; }
+
+    public String convert() {
+        return String.format("%-7s-%10s:%05d (%s)", getId(), getName(), getNumber(), getCategory());
+    }
 }
