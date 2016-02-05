@@ -1,0 +1,72 @@
+WELCOME TO THE DOJO!
+
+We have a small class, GenerateFlatRecordForShopEvent, with a bad instanceof habit.
+
+    if (obj instanceof ShopCloseEvent) { ... }
+    else if (obj instanceof ShopOpenEvent) { ... }
+    ...
+
+Any time we see the instanceof operator being used in an object-oriented language (like Java), we should be suspicious. Since objects are supposed to do things for and to themselves when we ask them, checking explicitly to see what class an object is should be regarded as a cry for help.
+
+What's the big deal? It's just one method, barely a dozen lines long. Surely we have bigger problems?
+
+Of course we do - but if we ignore this problem when it is tiny, how much more difficult will it be to correct it after two years and fourteen enhancements, when it is no longer a small problem?
+
+For example, the code that inspired this kata is 500 lines long, has 16 record generators, and an NPath (cyclomatic complexity) score of 65,536 - where the maximum recommended is 12. It probably didn't start that way, but grew over time. The pattern established at the beginning was followed by those that came later, and as a result the code got more and more difficult to maintain.
+
+This example is tiny so we can teach a lesson, quickly, and learn to recognize and correct such "bad seeds" early!
+
+Otherwise, the next time the GenerateFlatRecordForShopEvent class needs to be modified, for example, adding support for ShopCrowdedEvent, the developer - especially if in a hurry - may just follow the current pattern, which would result in a ShopCrowdedEventFlatFormatGenerator class, another generator-constructing function, and another if-branch with 4 more lines of code in the generateFlatFormatRecordForShopEvent method. If someone else wanders by and starts to hang more functionality off of the generator classes, while several consumers get used to passing untyped objects to the generateFlatFormatRecordForShopEvent method, this tiny seed can quickly grow into a gnarled, tangled briar-patch!
+
+So, let's clean this up by replacing the highly suspicious use of the instanceof operator with polymorphism.
+
+Of course, we probably don't want to make this change all at once, and (almost) never without unit tests!
+
+We've provided unit tests (TestGenerateFlatRecordFromShopEvent) to help keep things from breaking, and will proceed in tiny steps, refactoring a little at a time and running our unit tests often.
+
+
+NOTE
+
+These unit tests are a form of 'characterization test' (see Working with Legacy Code, by Michael Feathers), which means that we wrote the tests for a few cases and watched them fail, and let the unit-testing framework tell us the correct answers. Then we stuffed the correct answers back into the tests. While we'd love to have a full suite of exhaustive unit tests, such things are rarely available when working with legacy code so we have to create some tests to discover the current behavior. Once we've refactored the code into simpler structures, it will be easier to add more unit tests.
+
+Note that while we are proceeding in small steps, each individual step may not objectively and immediately improve the code, but is necessary to set up for the following steps. When refactoring, especially in an unfamiliar code base, it is best to proceed carefully, taking the smallest steps at each point that advance towards the goal - even if they may temporarily make things slightly more complex.
+
+For more information about the overall refactoring pattern being used here, Replace Conditional with Polymorphism, see http://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
+
+
+INSTRUCTIONS FOR STEP 1
+
+    1. extract methods for if-else blocks - to discover exactly what each block does and how they might differ
+
+The first thing we want to do is remove the clutter from the if-else chains, to make it easier to understand what
+each branch is really doing, and isolate what variables are being used.
+
+This step is especially easy if your editor supports an Extract Method refactoring operation. If not, just carefully copy and paste the code from each block into a new method, passing in any needed variables or values. For example, in the if-block below:
+
+    if (obj instanceof SomeClass) {
+        SomeClass sc = (SomeClass)obj;
+        sc.doSomething(someVar);
+    }
+    else ...
+
+We extract the body of the if-block to another method, and replace it with a call to that method. Be sure to pass in
+any variables that we need, e.g.
+
+    if (obj instanceof SomeClass) {
+        doSomethingWithSomeClass((SomeClass)obj, someVar);
+    }
+
+    private void doSomethingWithSomeClass(SomeClass sc, String someVar) {
+        sc.doSomething(someVar);
+    }
+
+In general, this is a safe transformation to make, because we are not changing the effective behavior of the code,
+just rearranging it slightly.
+
+
+TO DO
+
+Open the GenerateFlatRecordForShopEvent class, and extract methods for each if-else branch. Remember to run the unit tests (TestGenerateFlatRecordFromShopEvent) when you're done, to make sure it all still works. Then compare your results with the example refactoring in the next step, using the ./compare-results.sh script provided.
+
+For additional information about the Extract Method refactoring pattern, see
+http://refactoring.com/catalog/extractMethod.html
