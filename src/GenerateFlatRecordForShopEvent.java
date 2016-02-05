@@ -17,11 +17,11 @@ public class GenerateFlatRecordForShopEvent {
     }
 
     private String convertShopCloseEventToFlatRecordFormat(ShopCloseEvent shopCloseEvent) {
-        return shopCloseEvent.convert();
+        return shopCloseEvent.convertToFlatFormat();
     }
 
     private String convertShopOpenEventToFlatRecordFormat(ShopOpenEvent shopOpenEvent) {
-        return shopOpenEvent.convert();
+        return shopOpenEvent.convertToFlatFormat();
     }
 
 }
