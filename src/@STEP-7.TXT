@@ -1,0 +1,81 @@
+INSTRUCTIONS FOR STEP 7
+
+    7. There is no step 7. We're done!
+
+In the last step, we changed the public method signature to use our new base class. This eliminated the last instanceof condition and cast, and reduced the code to a single statement:
+
+    public String generateFlatFormatRecordForShopEvent(ShopEvent shopEvent) {
+        return shopEvent.convertToFlatFormat();
+    }
+
+Beautiful simplicity.
+
+This change is the payoff, but is the most fraught with potential peril. Why? Because this is the first time our refactoring changes were visible outside of the domain classes we've been modifying. Changing the public API of our method obviously affected every consumer of our method, and there may be a lot of them.
+
+Fortunately, we are able to build the entire system (in this case!) so the compiler will show us everywhere that needs to be changed - if any! Because we've specialized the public method's argument from Object to ShopEvent, the compiler will happily use our new method signature without complaint, as long as consumers were passing in correct domain objects.
+
+(Our consumers are the unit tests, in this example, which recompile without errors and still work fine.)
+
+NOTE
+
+In a larger system, this change may propagate potentially everywhere. If for some reason you are unable to rebuild the entire system, you might want to keep the original public method and add another method with the same name that takes a ShopEvent object instead of just an Object, and mark the original method as deprecated.
+
+Assuming a modern IDE, future consumers of this method will be given a choice of which method to call, with a notice that the original method is now deprecated.
+
+Personally, I think it is better to take the hit now, rather than later, and fix all consumers to use the new method. Since the domain classes (which we control) all inherit from the new base class, chances are good that all consumers will work correctly once they're recompiled... unless they were passing in objects that were not of type ShopEvent, in which case the compiler will tell us. It's better for the compiler to tell us this now, rather than waiting for eventual run-time errors!
+
+Note also that we could have consumers to call the convert method directly on their domain objects, rather than call our new method. Technically this method (and its class) is no longer necessary at all, at least in this tiny example. If there are a lot of consumers, this might require touching a lot of code in many different places. In that case, the overhead of an additional object instance and method call is probably not significant enough to warrant the change. In highly performant systems, however, it may be worthwhile to eliminate this method and its class, since they serve only to relay a call to the domain object. In a real system, I would expect the GenerateFlatRecordForShopEvent class to do something more than just relay method calls, of course.
+
+When refactoring, it helps to have a specific goal in mind, so you know when to stop. Since our goal was to eliminate the complexity incurred from all of the instanceof conditions and casting, and we have done that, we stop here.
+
+
+WRAP UP
+
+It is worth comparing the original code to the final code.
+
+    //original code
+    public class GenerateFlatRecordForShopEvent {
+
+        public String generateFlatFormatRecordForShopEvent(Object obj) {
+            String flatFormatRecord = null;
+
+            if (obj instanceof ShopOpenEvent) {
+                ShopOpenEvent shopOpenEvent = (ShopOpenEvent) obj;
+                flatFormatRecord = getShopOpenFlatFormatGenerator().convert(shopOpenEvent);
+            }
+            else if (obj instanceof ShopCloseEvent) {
+                ShopCloseEvent shopCloseEvent = (ShopCloseEvent) obj;
+                flatFormatRecord = getShopCloseFlatFormatGenerator().convert(shopCloseEvent);
+            }
+
+            return flatFormatRecord;
+        }
+
+        public ShopOpenEventFlatFormatGenerator getShopOpenFlatFormatGenerator() {
+            return new ShopOpenEventFlatFormatGenerator();
+        }
+
+        public ShopCloseEventFlatFormatGenerator getShopCloseFlatFormatGenerator() {
+            return new ShopCloseEventFlatFormatGenerator();
+        }
+
+    }
+
+    //refactored code
+    public class GenerateFlatRecordForShopEvent {
+
+        public String generateFlatFormatRecordForShopEvent(ShopEvent shopEvent) {
+            return shopEvent.convertToFlatFormat();
+        }
+
+    }
+
+Which one would you rather maintain and enhance?
+
+
+TO DO
+
+Try this kata again from the beginning, but use an interface instead of a base class.
+
+(One possible result is given in Step-8).
+
