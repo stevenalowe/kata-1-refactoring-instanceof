@@ -1,0 +1,18 @@
+INSTRUCTIONS FOR STEP 5
+
+    5. call via polymorphism
+
+We already have polymorphism in play from the last refactoring step, but it's obscured by the extracted method.
+
+Let's eliminate that method now that we no longer need it.
+
+(I don't know about you, but I get a kick out of deleting code and seeing everything still work!)
+
+I know it doesn't seem like much, but we have succeeded in covering all shop-event domain classes with a single instanceof test and cast (to the base class). Consider the effect this would have had if we had 16 domain classes instead of just two: we remove all instanceof conditions except the one on the base class.
+
+This step is small but powerful: it "covers" all of the other instanceof conditions and casts, eliminating all but one.
+
+
+TO DO
+
+Eliminate the last intermediate method and call convertToFlatFormat directly using polymorphism.
