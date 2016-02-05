@@ -1,0 +1,15 @@
+INSTRUCTIONS FOR STEP 3
+
+    3. add convert method to base class
+
+The unnecessary generators are gone, yay! We even renamed our transformation method from the generically uninformative convert() into something slightly more informative, convertToFlatFormat. If this was a 'real' domain, we would likely have an even better name, such as prepareAccountingSystemJournalEntryForShopEvent.
+
+The path to eliminate the instanceof operators may seem a bit roundabout, and that's okay. While we could jump straight to the final refactoring, doing so is risky. We may discover blockers along the way, we may do too much at once, leading to integration issues, etc. So we do a little bit at a time, always keeping our tests working, and always checking in our changes after each step. We can have confidence that as long as our tests pass, and as long as we have not changed the public API of our classes, we can't break anybody else's code.
+
+Ah, but with the generators gone, our code is getting simpler and easier to understand - but we still haven't eliminated the instanceof if-else blocks. Since we want to eliminate them using polymorphism, what do we need to be able to do that?
+
+A base class that declares a method with the same name, you say? Excellent idea!
+
+TO DO
+
+Create a base class for our shop-event classes with a convertToFlatFormat method. Remember to mark the subclasses' methods with @Override.

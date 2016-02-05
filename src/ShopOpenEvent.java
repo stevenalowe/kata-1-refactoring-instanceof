@@ -1,7 +1,7 @@
 /**
  * ShopOpenEvent - an imaginary domain object recording data about a shop opening
  */
-public class ShopOpenEvent {
+public class ShopOpenEvent extends ShopEvent {
     private String name;
     private int number;
     private String id;
@@ -15,7 +15,8 @@ public class ShopOpenEvent {
     public String getId() { return id; }
     public void setId(String value) { id = value; }
 
-    public String convert() {
+    @Override
+    public String convertToFlatFormat() {
         return String.format("%-7s-%10s:%05d", getId(), getName(), getNumber());
     }
 }

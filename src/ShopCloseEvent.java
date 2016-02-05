@@ -1,7 +1,7 @@
 /**
  * ShopCloseEvent - an imaginary domain object recording data about a shop closing
  */
-public class ShopCloseEvent {
+public class ShopCloseEvent extends ShopEvent {
     private String name;
     private int number;
     private String id;
@@ -19,7 +19,8 @@ public class ShopCloseEvent {
     public String getCategory() { return category; }
     public void setCategory(String value) { category = value; }
 
-    public String convert() {
+    @Override
+    public String convertToFlatFormat() {
         return String.format("%-7s-%10s:%05d (%s)", getId(), getName(), getNumber(), getCategory());
     }
 }
