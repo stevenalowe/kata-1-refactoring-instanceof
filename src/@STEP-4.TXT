@@ -1,0 +1,17 @@
+INSTRUCTIONS FOR STEP 4
+
+    4. wrap casting
+
+With our base class (we could have used an interface instead, but that's a different kata) we are poised on the brink of polymorphic bliss.
+
+This modification does not change the behavior at all, but it alters the structure significantly. We make the smallest set of coherent changes to rearrange the inheritance structure, run our tests, and call this step done. Safety first!
+
+Now we can take advantage of the fact that we have a base class, and eliminate some more code.
+
+
+TO DO
+
+Eliminate as much of the casting as you can.
+
+(Hint: can we check for the base class instead?)
+
