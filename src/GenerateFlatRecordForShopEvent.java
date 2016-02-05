@@ -7,11 +7,14 @@ public class GenerateFlatRecordForShopEvent {
         String flatFormatRecord = null;
 
         if (obj instanceof ShopEvent) {
-            ShopEvent shopEvent = (ShopEvent)obj;
-            flatFormatRecord = shopEvent.convertToFlatFormat();
+            flatFormatRecord = convertShopOpenEventToFlatRecordFormat((ShopEvent) obj);
         }
 
         return flatFormatRecord;
+    }
+
+    private String convertShopOpenEventToFlatRecordFormat(ShopEvent shopEvent) {
+        return shopEvent.convertToFlatFormat();
     }
 
 }
