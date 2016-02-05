@@ -1,0 +1,64 @@
+INSTRUCTIONS FOR STEP 2
+
+    2. eliminate unnecessary generator classes
+
+Congratulations on achieveing the first step in the refactoring kata! It takes courage to change code that already works, and practice such as this kata can help gain the confidence and attention to detail necessary to do it successfully.
+
+The first step seems pretty trivial, doesn't it? We just moved some code lines into methods and called the methods in their place. Yet this small change makes it easy to see what is going on in the if-blocks - which turns out to be: not much!
+
+You may notice that now we have more code than we had before. That's okay, and it's temporary. The point is not
+necessarily to minimize the lines of code, it's to make the code more readable, more testable, and more
+maintainable.
+
+Now that the code is out of the if-blocks and into isolated methods, let's take a look at what each method is doing.
+
+    private String convertShopCloseEventToFlatRecordFormat(ShopCloseEvent shopCloseEvent) {
+        return getShopCloseFlatFormatGenerator().convert(shopCloseEvent);
+    }
+
+    private String convertShopOpenEventToFlatRecordFormat(ShopOpenEvent shopOpenEvent) {
+        return getShopOpenFlatFormatGenerator().convert(shopOpenEvent);
+    }
+
+We chose descriptive names for these methods, to make it clear what each one is doing - and they're not really doing much, are they? Each method creates a generator for it's respective shop-event class, and calls the convert method on the generator.
+
+So what does that leave in the original if-else blocks?
+
+    if (obj instanceof ShopOpenEvent) {
+        flatFormatRecord = convertShopOpenEventToFlatRecordFormat((ShopOpenEvent) obj);
+    }
+    else if (obj instanceof ShopCloseEvent) {
+        flatFormatRecord = convertShopCloseEventToFlatRecordFormat((ShopCloseEvent) obj);
+    }
+
+Again, not much - just set the flatFormatRecord to the result of the method we just extracted. Note that we cast the obj argument to the appropriate shop-event class here, so the extracted methods are dealing with unambiguous types.
+
+Let's take a look at what the generator classes do -
+
+    public class ShopOpenEventFlatFormatGenerator {
+        public String convert(ShopOpenEvent record) {
+            return String.format("%-7s-%10s:%05d",
+                    record.getId(), record.getName(), record.getNumber());
+        }
+    }
+
+    public class ShopCloseEventFlatFormatGenerator {
+        public String convert(ShopCloseEvent record) {
+            return String.format("%-7s-%10s:%05d (%s)",
+                    record.getId(), record.getName(), record.getNumber(), record.getCategory());
+        }
+    }
+
+Not a lot going on here either - get some fields and shove them into a string in a particular format. Is this necessary?
+
+Well, yes, creating the flat (string) format is necessary, but do we really need the generator classes to do this? In other words, do the generator classes add any value to the chain of operations?
+
+No, they don't. The generator classes have no fields of their own, and no other behavior besides the convert method; they're "moving parts" that we don't need.
+
+We could make them static, but we still don't need them. Let's get rid of them instead!
+
+
+TO DO
+
+Eliminate the generator classes by migrating their methods to their respective domain classes.
+

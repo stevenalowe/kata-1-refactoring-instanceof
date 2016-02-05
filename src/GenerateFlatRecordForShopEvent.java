@@ -7,29 +7,21 @@ public class GenerateFlatRecordForShopEvent {
         String flatFormatRecord = null;
 
         if (obj instanceof ShopOpenEvent) {
-            flatFormatRecord = generateFlatFormatRecordForShopOpenEvent((ShopOpenEvent) obj);
+            flatFormatRecord = convertShopOpenEventToFlatRecordFormat((ShopOpenEvent) obj);
         }
         else if (obj instanceof ShopCloseEvent) {
-            flatFormatRecord = generateFlatFormatRecordForShopCloseEvent((ShopCloseEvent) obj);
+            flatFormatRecord = convertShopCloseEventToFlatRecordFormat((ShopCloseEvent) obj);
         }
 
         return flatFormatRecord;
     }
 
-    private String generateFlatFormatRecordForShopCloseEvent(ShopCloseEvent shopCloseEvent) {
-        return getShopCloseFlatFormatGenerator().convert(shopCloseEvent);
+    private String convertShopCloseEventToFlatRecordFormat(ShopCloseEvent shopCloseEvent) {
+        return shopCloseEvent.convert();
     }
 
-    private String generateFlatFormatRecordForShopOpenEvent(ShopOpenEvent shopOpenEvent) {
-        return getShopOpenFlatFormatGenerator().convert(shopOpenEvent);
-    }
-
-    public ShopOpenEventFlatFormatGenerator getShopOpenFlatFormatGenerator() {
-        return new ShopOpenEventFlatFormatGenerator();
-    }
-
-    public ShopCloseEventFlatFormatGenerator getShopCloseFlatFormatGenerator() {
-        return new ShopCloseEventFlatFormatGenerator();
+    private String convertShopOpenEventToFlatRecordFormat(ShopOpenEvent shopOpenEvent) {
+        return shopOpenEvent.convert();
     }
 
 }
